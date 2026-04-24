@@ -28,3 +28,20 @@ y cargue la información en una base de datos relacional PostgreSQL.
 - Julio Puentes Santos – Coordinador
 - Sergio Lipuzcoa – BBDD
 - Pedro González – Desarrollo ETL
+
+## Decisiones técnicas
+
+### Base de datos
+Se utilizará PostgreSQL por ser un sistema relacional robusto
+y adecuado para integridad referencial.
+
+### Anonimización
+- DNI: no se almacena en claro, se guarda hasheado.
+- Número de tarjeta: se guarda en formato masked (**** **** **** 1234).
+- CVV: no se almacena, o se guarda hasheado.
+
+### Validaciones
+Se validarán:
+- DNI (formato)
+- Correo electrónico
+- Teléfono
