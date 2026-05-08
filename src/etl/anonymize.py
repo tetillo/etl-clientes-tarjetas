@@ -1,28 +1,32 @@
 import re
+import hashlib
 
-def enmascarar_tarjeta(tarjeta):
-    if not isinstance(tarjeta, str):
+def enmascarar_tarjeta(numero):
+    if not isinstance(numero, str):
         return ""
 
-    digitos = re.sub(r"\D", "", tarjeta)
+    numero = re.sub(r"\D", "", numero)
 
-    if len(digitos) < 4:
-        return "****"
+    if len(numero) < 4:
+        return "XXXX"
 
-    return "*" * (len(digitos) - 4) + digitos[-4:]
+    return "XXXX-XXXX-XXXX-" + numero[-4:]
 
 
-def enmascarar_cvv(cvv):
-    return "***"
+def hash_cvv(cvv):
+    return hashlib.sha256(str(cvv).encode()).hexdigest()
 
 
 def anonimizar(df):
     df = df.copy()
 
-    if "tarjeta" in df.columns:
-        df["tarjeta"] = df["tarjeta"].apply(enmascarar_tarjeta)
+    # TARJETAS
+    if "numero_tarjeta" in df.columns:
+        df["numero_tarjeta_masked"] = df["numero_tarjeta"].apply(enmascarar_tarjeta)
+        df.drop(columns=["numero_tarjeta"], inplace=True)
 
     if "cvv" in df.columns:
-        df["cvv"] = df["cvv"].apply(enmascarar_cvv)
+        df["cvv_hash"] = df["cvv"].apply(hash_cvv)
+        df.drop(columns=["cvv"], inplace=True)
 
     return df

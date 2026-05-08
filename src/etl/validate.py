@@ -31,14 +31,20 @@ def validar_telefono(telefono):
 def separar_validos_invalidos(df):
     df = df.copy()
 
-    df["dni_valido"] = df["dni"].apply(validar_dni)
-    df["email_valido"] = df["email"].apply(validar_email)
-    df["telefono_valido"] = df["telefono"].apply(validar_telefono)
+    df["dni_ok"] = df["dni"].apply(lambda x: "Y" if validar_dni(x) else "N")
+    df["dni_ko"] = df["dni"].apply(lambda x: "N" if validar_dni(x) else "Y")
+
+    df["correo_ok"] = df["correo"].apply(lambda x: "Y" if validar_email(x) else "N")
+    df["correo_ko"] = df["correo"].apply(lambda x: "N" if validar_email(x) else "Y")
+
+    df["telefono_ok"] = df["telefono"].apply(lambda x: "Y" if validar_telefono(x) else "N")
+    df["telefono_ko"] = df["telefono"].apply(lambda x: "N" if validar_telefono(x) else "Y")
+
 
     mascara = (
-        df["dni_valido"] &
-        df["email_valido"] &
-        df["telefono_valido"]
+        (df["dni_ok"] == "Y") &
+        (df["correo_ok"] == "Y") &
+        (df["telefono_ok"] == "Y")
     )
 
     df_validos = df[mascara].copy()

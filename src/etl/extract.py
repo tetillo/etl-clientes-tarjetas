@@ -6,14 +6,22 @@ def detectar_codificacion(ruta_archivo):
         muestra = f.read(10000)
     return chardet.detect(muestra)["encoding"] or "utf-8"
 
+
 def leer_csv(ruta_archivo):
     encoding = detectar_codificacion(ruta_archivo)
 
     try:
-        return pd.read_csv(ruta_archivo, encoding=encoding)
+        return pd.read_csv(
+            ruta_archivo,
+            encoding=encoding,
+            sep=";",     
+            dtype=str
+        )
     except Exception:
         return pd.read_csv(
             ruta_archivo,
             encoding="latin-1",
+            sep=";",           
+            dtype=str,
             on_bad_lines="skip"
         )
